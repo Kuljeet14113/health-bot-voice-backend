@@ -1,0 +1,191 @@
+[
+    {
+      "symptoms": ["fever", "high temperature"],
+      "advice": "You may have a viral or bacterial infection. Stay hydrated, rest, and consider paracetamol if needed. If fever persists for more than 2 days, consult a doctor."
+    },
+    {
+      "symptoms": ["headache", "migraine", "head pain"],
+      "advice": "Headaches are often caused by stress, dehydration, or lack of sleep. Drink water, rest in a quiet place, and avoid screen time. If severe or frequent, consult a doctor."
+    },
+    {
+      "symptoms": ["cold", "sneezing", "runny nose"],
+      "advice": "It looks like a common cold. Drink warm fluids, take steam inhalation, and rest. Symptoms usually improve in a few days."
+    },
+    {
+      "symptoms": ["cough", "dry cough", "wet cough"],
+      "advice": "A cough may be due to throat irritation or infection. Drink warm water, avoid dust/smoke, and use honey with warm water. If cough lasts more than 2 weeks, consult a doctor."
+    },
+    {
+      "symptoms": ["sore throat", "throat pain"],
+      "advice": "Sore throat is often due to infection or allergies. Gargle with warm salt water, drink warm fluids, and rest your voice."
+    },
+    {
+      "symptoms": ["stomach pain", "abdominal pain"],
+      "advice": "Stomach pain can be caused by indigestion or gastritis. Eat light meals, avoid spicy/oily foods, and drink warm water. If pain is severe, consult a doctor."
+    },
+    {
+      "symptoms": ["diarrhea", "loose motion"],
+      "advice": "Diarrhea may be due to infection or food intolerance. Drink ORS (oral rehydration solution) and fluids to avoid dehydration. If it continues, consult a doctor."
+    },
+    {
+      "symptoms": ["constipation"],
+      "advice": "Constipation can be relieved by drinking more water, eating fiber-rich foods, and exercising regularly. If persistent, consult a doctor."
+    },
+    {
+      "symptoms": ["vomiting", "nausea"],
+      "advice": "Vomiting may be due to indigestion or infection. Drink small sips of water, avoid solid food until you feel better. If continuous, seek medical help."
+    },
+    {
+      "symptoms": ["dizziness", "lightheaded", "vertigo"],
+      "advice": "Dizziness may occur due to dehydration or low blood pressure. Sit down immediately, drink fluids, and rest. If persistent, consult a doctor."
+    },
+    {
+      "symptoms": ["fatigue", "tiredness", "weakness"],
+      "advice": "Fatigue may result from lack of sleep, stress, or poor diet. Take rest, eat nutritious food, and stay hydrated."
+    },
+    {
+      "symptoms": ["shortness of breath", "breathless"],
+      "advice": "Shortness of breath can be serious. Sit upright, stay calm, and seek immediate medical attention if severe or sudden."
+    },
+    {
+      "symptoms": ["chest pain", "tight chest"],
+      "advice": "Chest pain may indicate a heart or lung problem. This can be urgent — seek emergency care immediately."
+    },
+    {
+      "symptoms": ["back pain"],
+      "advice": "Back pain may result from poor posture or strain. Rest, apply a warm compress, and maintain good posture."
+    },
+    {
+      "symptoms": ["joint pain", "knee pain", "arthritis"],
+      "advice": "Joint pain may be due to strain or arthritis. Rest, apply warm compress, and do gentle exercises."
+    },
+    {
+      "symptoms": ["muscle pain", "body ache"],
+      "advice": "Muscle pain may occur after exercise or viral infection. Rest and take warm baths. Gentle stretching may help."
+    },
+    {
+      "symptoms": ["eye pain", "red eyes", "itchy eyes"],
+      "advice": "Eye irritation can be caused by allergies or infection. Rinse with clean water and avoid rubbing your eyes."
+    },
+    {
+      "symptoms": ["blurred vision"],
+      "advice": "Blurred vision may indicate eye strain or vision problems. Rest your eyes and get an eye checkup if it continues."
+    },
+    {
+      "symptoms": ["ear pain", "earache"],
+      "advice": "Ear pain may be due to infection or wax buildup. Avoid inserting objects into the ear and consult a doctor if severe."
+    },
+    {
+      "symptoms": ["tooth pain", "toothache"],
+      "advice": "Tooth pain may indicate dental issues. Rinse with warm salt water and avoid very hot/cold foods. Visit a dentist if pain persists."
+    },
+    {
+      "symptoms": ["gum bleeding"],
+      "advice": "Bleeding gums may be due to poor oral hygiene or vitamin deficiency. Brush gently and consult a dentist."
+    },
+    {
+      "symptoms": ["skin rash", "itching"],
+      "advice": "Skin rash may be due to allergy or infection. Avoid scratching and apply soothing lotion. If spreading, consult a doctor."
+    },
+    {
+      "symptoms": ["acne", "pimples"],
+      "advice": "Acne is often related to hormones or oily skin. Wash face twice daily and avoid oily foods."
+    },
+    {
+      "symptoms": ["allergy", "sneezing", "itchy nose"],
+      "advice": "Allergy symptoms can be controlled by avoiding triggers like dust and pollen. Take antihistamines if recommended by a doctor."
+    },
+    {
+      "symptoms": ["asthma"],
+      "advice": "Asthma can cause breathing problems. Use your inhaler if prescribed. If severe attack occurs, seek emergency care."
+    },
+    {
+      "symptoms": ["burning urination", "urinary pain"],
+      "advice": "Burning urination may be a urinary infection. Drink plenty of water. If it continues, consult a doctor."
+    },
+    {
+      "symptoms": ["frequent urination"],
+      "advice": "Frequent urination may be due to infection or diabetes. Monitor fluid intake and consult a doctor if persistent."
+    },
+    {
+      "symptoms": ["period pain", "menstrual cramps"],
+      "advice": "Menstrual cramps are common. Use a hot water bag and rest. Over-the-counter pain relief may help if necessary."
+    },
+    {
+      "symptoms": ["irregular periods"],
+      "advice": "Irregular periods may be due to stress, hormonal imbalance, or PCOS. Track cycles and consult a gynecologist if frequent."
+    },
+    {
+      "symptoms": ["pregnancy symptoms", "morning sickness"],
+      "advice": "Morning sickness is common in pregnancy. Eat small meals and stay hydrated. Consult a gynecologist for proper care."
+    },
+    {
+      "symptoms": ["weight loss", "unexplained weight loss"],
+      "advice": "Unexplained weight loss can indicate underlying illness. Maintain a balanced diet and consult a doctor if ongoing."
+    },
+    {
+      "symptoms": ["weight gain", "obesity"],
+      "advice": "Weight gain may be due to poor diet or hormonal imbalance. Eat healthy, exercise regularly, and consult a doctor if rapid."
+    },
+    {
+      "symptoms": ["insomnia", "sleep problem"],
+      "advice": "Insomnia can be caused by stress or lifestyle. Avoid caffeine, use relaxation techniques, and maintain sleep hygiene."
+    },
+    {
+      "symptoms": ["anxiety", "panic attack"],
+      "advice": "Anxiety may cause palpitations and fear. Practice deep breathing, relaxation, and consult a mental health professional if needed."
+    },
+    {
+      "symptoms": ["depression", "sadness"],
+      "advice": "Depression may cause low mood and fatigue. Talk to a trusted person, exercise, and seek help from a counselor or doctor."
+    },
+    {
+      "symptoms": ["memory loss"],
+      "advice": "Mild forgetfulness can be due to stress or aging. If severe or worsening, consult a neurologist."
+    },
+    {
+      "symptoms": ["hypertension", "high blood pressure"],
+      "advice": "High BP may not show symptoms. Reduce salt, exercise regularly, and monitor pressure. Consult a doctor for medication."
+    },
+    {
+      "symptoms": ["low blood pressure", "hypotension"],
+      "advice": "Low BP can cause dizziness. Drink water, eat small meals, and rest. Seek medical care if persistent."
+    },
+    {
+      "symptoms": ["diabetes", "high sugar"],
+      "advice": "Diabetes requires medical monitoring. Eat a balanced diet, exercise, and take prescribed medicines regularly."
+    },
+    {
+      "symptoms": ["anemia", "low hemoglobin"],
+      "advice": "Anemia may cause weakness and pale skin. Eat iron-rich foods like spinach, lentils, and consult a doctor."
+    },
+    {
+      "symptoms": ["covid", "loss of taste", "loss of smell"],
+      "advice": "These may be COVID-19 symptoms. Isolate yourself, wear a mask, monitor oxygen, and consult a doctor for testing."
+    },
+    {
+      "symptoms": ["flu", "influenza"],
+      "advice": "Flu causes fever, cough, and body ache. Rest, hydrate, and take paracetamol if needed. Consult a doctor if severe."
+    },
+    {
+      "symptoms": ["food poisoning"],
+      "advice": "Food poisoning can cause vomiting and diarrhea. Drink ORS, rest, and eat bland food. If severe dehydration occurs, consult a doctor."
+    },
+    {
+      "symptoms": ["sunburn"],
+      "advice": "Sunburn causes redness and pain. Apply aloe vera gel and stay hydrated. Avoid sun exposure until healed."
+    },
+    {
+      "symptoms": ["heat stroke"],
+      "advice": "Heat stroke is an emergency. Move to a cool place, drink water, and seek immediate medical help."
+    },
+    {
+      "symptoms": ["dehydration"],
+      "advice": "Dehydration causes weakness and dizziness. Drink water or ORS immediately."
+    },
+    {
+      "symptoms": ["allergic reaction", "swelling", "hives"],
+      "advice": "Allergic reactions may cause rashes or swelling. Take an antihistamine if available. If breathing difficulty occurs, seek emergency help."
+    }
+  ]
+  

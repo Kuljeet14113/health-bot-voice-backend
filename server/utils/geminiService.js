@@ -1,4 +1,35 @@
 import fetch from 'node-fetch';
+import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+function getDatasetAdvice(symptomQuery) {
+  try {
+    const symptomsPath = path.join(__dirname, '../datasets/symptoms.json');
+    const data = JSON.parse(fs.readFileSync(symptomsPath, 'utf8'));
+    const q = symptomQuery.toLowerCase();
+    const matches = data.filter(item =>
+      Array.isArray(item.symptoms) && item.symptoms.some(s => s.toLowerCase().includes(q))
+    );
+
+    if (matches.length === 0) return null;
+
+    // Merge unique advices (cap to 3) to avoid repetition
+    const advices = [];
+    for (const m of matches) {
+      if (m.advice && !advices.includes(m.advice)) advices.push(m.advice);
+      if (advices.length >= 3) break;
+    }
+
+    return advices.join('\n\n');
+  } catch (e) {
+    console.error('Failed to read dataset for advice:', e);
+    return null;
+  }
+}
 
 export const generateProfessionalAdvice = async (symptomQuery) => {
   try {
@@ -21,6 +52,8 @@ export const generateProfessionalAdvice = async (symptomQuery) => {
       };
     }
 
+    const datasetAdvice = getDatasetAdvice(symptomQuery);
+
     const prompt = `You are responding as a licensed clinician. A patient reports: "${symptomQuery}".
 
 STRICT RESPONSE REQUIREMENTS:
@@ -30,6 +63,11 @@ STRICT RESPONSE REQUIREMENTS:
 - Structure the response with these headings only: Assessment, Self‑care, Red flags, Next steps.
 - Keep within 1600 characters total.
 
+KNOWLEDGE BASE (use as guidance if relevant; do not quote verbatim):
+${datasetAdvice ? `"""
+${datasetAdvice}
+"""` : '(No dataset guidance found)'}
+
 OUT-OF-SCOPE HANDLING:
 If the patient's message is not about health, symptoms, conditions, risks, or medical self-care, respond EXACTLY with: "This question is outside my medical scope. Please ask about health symptoms, conditions, or care." and nothing else.
 
@@ -37,6 +75,10 @@ Now write the response.`;
 
     const apiKey = process.env.GEMINI_API_KEY;
     if (!apiKey) {
+      // Graceful fallback to dataset-only advice if available
+      if (datasetAdvice) {
+        return { success: true, message: datasetAdvice };
+      }
       return {
         success: false,
         message: 'AI service is currently unavailable. Please consult a healthcare provider.'
@@ -62,6 +104,10 @@ Now write the response.`;
     if (!response.ok) {
       const err = await response.text();
       console.error('Gemini API error:', err);
+      // Fallback to dataset advice if present
+      if (datasetAdvice) {
+        return { success: true, message: datasetAdvice };
+      }
       return {
         success: false,
         message: 'AI service is temporarily unavailable. Please try again later.'
@@ -77,6 +123,11 @@ Now write the response.`;
     };
   } catch (error) {
     console.error('Gemini service error:', error);
+    // Last-resort dataset fallback
+    const datasetAdvice = getDatasetAdvice(symptomQuery || '');
+    if (datasetAdvice) {
+      return { success: true, message: datasetAdvice };
+    }
     return {
       success: false,
       message: 'AI service is temporarily unavailable. Please try again later.'

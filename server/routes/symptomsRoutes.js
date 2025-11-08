@@ -4,6 +4,9 @@ import fs from 'fs';
 import { fileURLToPath } from 'url';
 import { searchWithSpellCheck, findSpellSuggestions } from '../utils/spellChecker.js';
 import fetch from 'node-fetch';
+import { generateProfessionalAdvice as generateAdviceService } from '../utils/geminiService.js';
+import { SymptomClassifier } from '../utils/symptomClassifier.js';
+import { findMedicinesBySymptomText } from '../utils/medicinesService.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -94,64 +97,30 @@ router.post('/symptoms/gemini/advice', async (req, res) => {
       return res.status(400).json({ success: false, message: 'symptomQuery is required' });
     }
 
-    // Simple server-side guard for clearly non-medical prompts
-    const nonMedicalTriggers = [
-      'capital of', 'who is', 'what is node', 'what is javascript', 'programming', 'python', 'java ', 'c++', 'react', 'football', 'cricket', 'movie', 'song', 'weather', 'stock', 'bitcoin', 'crypto', 'country', 'president', 'prime minister', 'capital city'
-    ];
-    const lowerQ = symptomQuery.toLowerCase();
-    if (nonMedicalTriggers.some(k => lowerQ.includes(k))) {
-      return res.json({
-        success: true,
-        message: 'This question is outside my medical scope. Please ask about health symptoms, conditions, or care.'
-      });
+    // Delegate to shared service which already includes out-of-scope guard,
+    // dataset context, and dataset-based fallback when API key is missing
+    const result = await generateAdviceService(symptomQuery);
+
+    if (!result) {
+      return res.status(502).json({ success: false, message: 'Failed to generate advice' });
     }
 
-    const prompt = `You are responding as a licensed clinician. A patient reports: "${symptomQuery}".
+    // Enrich with classification and medicines so clients can render full UI
+    const classification = await SymptomClassifier.processSymptom(symptomQuery);
+    const medicines = findMedicinesBySymptomText(symptomQuery);
 
-STRICT RESPONSE REQUIREMENTS:
-- Provide only clinically relevant information. Do not include any non-medical content, metadata, sources, or system notes.
-- Do not diagnose or claim certainty. Use non-diagnostic language ("may be consistent with", "could be due to").
-- Be concise, empathetic, and actionable.
-- Structure the response with these headings only: Assessment, Self‑care, Red flags, Next steps.
-- Keep within 1600 characters total.
-
-OUT-OF-SCOPE HANDLING:
-If the patient's message is not about health, symptoms, conditions, risks, or medical self-care, respond EXACTLY with: "This question is outside my medical scope. Please ask about health symptoms, conditions, or care." and nothing else.
-
-Now write the response.`;
-
-    const apiKey = process.env.GEMINI_API_KEY;
-    if (!apiKey) {
-      return res.status(500).json({ success: false, message: 'Gemini API key not configured' });
-    }
-
-    // Gemini Generative Language API (text) — use a supported model for v1beta
-    const geminiUrl = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent';
-    const response = await fetch(`${geminiUrl}?key=${apiKey}`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        contents: [{ parts: [{ text: prompt }] }],
-        generationConfig: {
-          temperature: 0.3,
-          topP: 0.9,
-          topK: 40,
-          maxOutputTokens: 512
-        }
-      })
+    return res.status(result.success ? 200 : 502).json({
+      success: result.success,
+      message: result.message,
+      complexity: classification.complexity,
+      shouldSeeDoctor: classification.shouldSeeDoctor,
+      doctors: classification.doctors || [],
+      specialization: classification.specialization || SymptomClassifier.getDoctorSpecialization(symptomQuery),
+      medicines: medicines || [],
+      timestamp: new Date().toISOString()
     });
-
-    if (!response.ok) {
-      const err = await response.text();
-      return res.status(502).json({ success: false, message: 'Gemini API error', error: err });
-    }
-
-    const result = await response.json();
-    const text = result?.candidates?.[0]?.content?.parts?.[0]?.text || 'No response generated.';
-
-    res.json({ success: true, message: text });
   } catch (error) {
     console.error('Gemini advice error:', error);
-    res.status(500).json({ success: false, message: 'Failed to generate advice' });
+    return res.status(500).json({ success: false, message: 'Failed to generate advice' });
   }
 });

@@ -15,19 +15,28 @@ export const generatePrescription = async (req, res) => {
 
     // Classify symptoms to determine complexity and get doctor recommendation
     const classification = await SymptomClassifier.processSymptom(symptoms);
+    // Derive a specialization even for basic cases
+    const derivedSpecialization = classification.specialization || SymptomClassifier.getDoctorSpecialization(symptoms);
     
     // Find appropriate doctor based on classification
     let recommendedDoctor = null;
     if (classification.complexity === 'complex' && classification.doctors.length > 0) {
       recommendedDoctor = classification.doctors[0]; // Get first recommended doctor
     } else {
-      // For basic symptoms, recommend a general practitioner
-      const generalPractitioners = await Doctor.find({ 
-        specialization: { $regex: /general|family|primary/i }
+      // Try to find a doctor matching derived specialization first
+      const bySpecialization = await Doctor.find({
+        specialization: { $regex: derivedSpecialization, $options: 'i' }
       }).limit(1);
-      
-      if (generalPractitioners.length > 0) {
-        recommendedDoctor = generalPractitioners[0];
+      if (bySpecialization.length > 0) {
+        recommendedDoctor = bySpecialization[0];
+      } else {
+        // Fallback to general practitioner
+        const generalPractitioners = await Doctor.find({ 
+          specialization: { $regex: /general|family|primary/i }
+        }).limit(1);
+        if (generalPractitioners.length > 0) {
+          recommendedDoctor = generalPractitioners[0];
+        }
       }
     }
 
@@ -39,7 +48,7 @@ export const generatePrescription = async (req, res) => {
       allergies: allergies || 'None reported',
       medications: medications || 'None reported',
       complexity: classification.complexity,
-      specialization: classification.specialization
+      specialization: derivedSpecialization
     };
 
     const prescription = await generatePrescriptionWithGemini(prescriptionData);

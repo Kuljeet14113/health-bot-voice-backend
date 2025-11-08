@@ -3,6 +3,39 @@ import Doctor from '../models/doctor.js';
 import mongoose from 'mongoose';
 import { sendAppointmentConfirmationEmail, sendAppointmentCancellationEmail } from '../utils/emailService.js';
 
+// Get booked time slots for a doctor on a specific date (public)
+export const getDoctorAvailability = async (req, res) => {
+  try {
+    const { doctorId } = req.params;
+    const { date } = req.query;
+
+    if (!date) {
+      return res.status(400).json({ success: false, message: 'Date is required' });
+    }
+
+    if (!mongoose.Types.ObjectId.isValid(doctorId)) {
+      return res.status(400).json({ success: false, message: 'Invalid doctor ID format' });
+    }
+
+    const dateObj = new Date(date);
+    const startOfDay = new Date(dateObj.getFullYear(), dateObj.getMonth(), dateObj.getDate(), 0, 0, 0, 0);
+    const endOfDay = new Date(dateObj.getFullYear(), dateObj.getMonth(), dateObj.getDate(), 23, 59, 59, 999);
+
+    const appointments = await Appointment.find({
+      doctorId: new mongoose.Types.ObjectId(doctorId),
+      appointmentDate: { $gte: startOfDay, $lt: endOfDay },
+      status: { $in: ['pending', 'confirmed'] }
+    }).select('appointmentTime status');
+
+    const bookedSlots = appointments.map(a => a.appointmentTime);
+
+    res.status(200).json({ success: true, bookedSlots });
+  } catch (error) {
+    console.error('Get doctor availability error:', error);
+    res.status(500).json({ success: false, message: 'Failed to fetch availability' });
+  }
+};
+
 // Book a new appointment
 export const bookAppointment = async (req, res) => {
   try {

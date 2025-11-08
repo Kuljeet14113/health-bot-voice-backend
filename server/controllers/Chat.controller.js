@@ -1,5 +1,6 @@
 import { SymptomClassifier } from '../utils/symptomClassifier.js';
 import { generateProfessionalAdvice } from '../utils/geminiService.js';
+import { findMedicinesBySymptomText } from '../utils/medicinesService.js';
 
 export const processChatMessage = async (req, res) => {
   try {
@@ -12,7 +13,7 @@ export const processChatMessage = async (req, res) => {
       });
     }
 
-    // First, try to get professional advice from Gemini
+    // First, try to get professional advice from Gemini (with dataset fallback inside)
     let professionalAdvice = null;
     try {
       const geminiResponse = await generateProfessionalAdvice(message);
@@ -25,6 +26,9 @@ export const processChatMessage = async (req, res) => {
 
     // Classify the symptom to determine complexity
     const classification = await SymptomClassifier.processSymptom(message);
+
+    // Find medicine suggestions from local dataset
+    const medicines = findMedicinesBySymptomText(message);
     
     let response = {
       success: true,
@@ -33,21 +37,37 @@ export const processChatMessage = async (req, res) => {
       shouldSeeDoctor: classification.shouldSeeDoctor,
       doctors: classification.doctors || [],
       specialization: classification.specialization || null,
-      timestamp: new Date().toISOString()
+      timestamp: new Date().toISOString(),
+      medicines: medicines || []
     };
 
     // Combine professional advice with classification results
     if (professionalAdvice) {
       response.message = professionalAdvice;
-      
+
       // Add doctor recommendation if complex
       if (classification.complexity === 'complex' && classification.doctors.length > 0) {
         response.message += `\n\n**Doctor Recommendation:** Based on your symptoms, I recommend consulting with a ${classification.specialization}. Here are some available doctors:`;
         response.doctors = classification.doctors;
       }
+      // Add concise medicine suggestions summary below the advice
+      if (medicines && medicines.length > 0) {
+        const first = medicines[0];
+        const medsList = (first.medicines || []).slice(0, 3).map(m => `${m.name} (${m.dose}, ${m.frequency}${m.timing ? ', ' + m.timing : ''})`).join('; ');
+        if (medsList) {
+          response.message += `\n\n**Suggested Medicines (from dataset) for ${first.condition}:** ${medsList}`;
+        }
+      }
     } else {
       // Fallback response if Gemini is unavailable
       response.message = classification.message;
+      if (medicines && medicines.length > 0) {
+        const first = medicines[0];
+        const medsList = (first.medicines || []).slice(0, 3).map(m => `${m.name} (${m.dose}, ${m.frequency}${m.timing ? ', ' + m.timing : ''})`).join('; ');
+        if (medsList) {
+          response.message += `\n\n**Suggested Medicines (from dataset) for ${first.condition}:** ${medsList}`;
+        }
+      }
     }
 
     res.json(response);

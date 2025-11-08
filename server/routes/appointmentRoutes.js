@@ -3,6 +3,7 @@ import rateLimit from 'express-rate-limit';
 import { authenticate } from '../middleware/authenticate.js';
 import {
   bookAppointment,
+  getDoctorAvailability,
   getDoctorAppointments,
   getDoctorPendingAppointments,
   getPatientAppointments,
@@ -30,6 +31,7 @@ const appointmentLimiter = rateLimit({
 
 // Public routes (no authentication required)
 router.post('/book', appointmentLimiter, bookAppointment);
+router.get('/doctor/:doctorId/availability', getDoctorAvailability);
 
 // Protected routes (authentication required)
 router.get('/doctor/:doctorId', authenticate, getDoctorAppointments);

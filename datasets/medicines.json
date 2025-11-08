@@ -1,0 +1,276 @@
+{
+  "conditions": [
+    {
+      "condition": "Common Cold",
+      "medicines": [
+        { "name": "Acetaminophen", "dose": "500 mg", "frequency": "every 6 hours as needed", "timing": "after" },
+        { "name": "Dextromethorphan", "dose": "10 ml", "frequency": "every 6-8 hours", "timing": "anytime" },
+        { "name": "Cetirizine", "dose": "10 mg", "frequency": "once daily at night", "timing": "anytime" }
+      ]
+    },
+    {
+      "condition": "Fever",
+      "medicines": [
+        { "name": "Paracetamol", "dose": "650 mg", "frequency": "every 6-8 hours", "timing": "after" },
+        { "name": "Ibuprofen", "dose": "400 mg", "frequency": "every 8 hours", "timing": "after" }
+      ]
+    },
+    {
+      "condition": "Gastric Acidity",
+      "medicines": [
+        { "name": "Pantoprazole", "dose": "40 mg", "frequency": "once daily", "timing": "before" },
+        { "name": "Domperidone", "dose": "10 mg", "frequency": "twice daily", "timing": "before" }
+      ]
+    },
+    {
+      "condition": "Hypertension",
+      "medicines": [
+        { "name": "Amlodipine", "dose": "5 mg", "frequency": "once daily", "timing": "anytime" },
+        { "name": "Losartan", "dose": "50 mg", "frequency": "once daily", "timing": "anytime" }
+      ]
+    },
+    {
+      "condition": "Type 2 Diabetes",
+      "medicines": [
+        { "name": "Metformin", "dose": "500 mg", "frequency": "twice daily", "timing": "after" },
+        { "name": "Glimepiride", "dose": "1 mg", "frequency": "once daily", "timing": "before" }
+      ]
+    },
+    {
+      "condition": "Headache/Migraine",
+      "medicines": [
+        { "name": "Paracetamol", "dose": "500 mg", "frequency": "every 6 hours as needed", "timing": "after" },
+        { "name": "Ibuprofen", "dose": "400 mg", "frequency": "every 8 hours as needed", "timing": "after" }
+      ]
+    },
+    {
+      "condition": "Cough",
+      "medicines": [
+        { "name": "Dextromethorphan", "dose": "10 ml", "frequency": "every 6-8 hours", "timing": "anytime" },
+        { "name": "Ambroxol", "dose": "30 mg", "frequency": "three times daily", "timing": "after" }
+      ]
+    },
+    {
+      "condition": "Sore Throat",
+      "medicines": [
+        { "name": "Paracetamol", "dose": "500 mg", "frequency": "every 6 hours as needed", "timing": "after" },
+        { "name": "Chlorhexidine Gargle", "dose": "10 ml", "frequency": "gargle twice daily", "timing": "anytime" }
+      ]
+    },
+    {
+      "condition": "Stomach Pain/Indigestion",
+      "medicines": [
+        { "name": "Dicyclomine", "dose": "20 mg", "frequency": "three times daily", "timing": "after" },
+        { "name": "Pantoprazole", "dose": "40 mg", "frequency": "once daily", "timing": "before" }
+      ]
+    },
+    {
+      "condition": "Diarrhea",
+      "medicines": [
+        { "name": "ORS", "dose": "200-250 ml", "frequency": "after each loose stool", "timing": "anytime" },
+        { "name": "Zinc Sulfate", "dose": "20 mg", "frequency": "once daily for 10-14 days", "timing": "after" },
+        { "name": "Loperamide (adult)", "dose": "2 mg", "frequency": "after each loose stool (max 16 mg/day)", "timing": "anytime" }
+      ]
+    },
+    {
+      "condition": "Constipation",
+      "medicines": [
+        { "name": "Psyllium Husk", "dose": "1-2 tsp with water", "frequency": "once daily", "timing": "anytime" },
+        { "name": "Lactulose", "dose": "15-30 ml", "frequency": "once daily", "timing": "anytime" }
+      ]
+    },
+    {
+      "condition": "Vomiting/Nausea",
+      "medicines": [
+        { "name": "Ondansetron", "dose": "4 mg", "frequency": "every 8 hours as needed", "timing": "anytime" },
+        { "name": "Domperidone", "dose": "10 mg", "frequency": "twice daily", "timing": "before" }
+      ]
+    },
+    {
+      "condition": "Dizziness/Vertigo",
+      "medicines": [
+        { "name": "Meclizine", "dose": "25 mg", "frequency": "once or twice daily", "timing": "anytime" }
+      ]
+    },
+    {
+      "condition": "Fatigue/Body Ache",
+      "medicines": [
+        { "name": "Paracetamol", "dose": "500 mg", "frequency": "every 6 hours as needed", "timing": "after" }
+      ]
+    },
+    {
+      "condition": "Back Pain",
+      "medicines": [
+        { "name": "Ibuprofen", "dose": "400 mg", "frequency": "every 8 hours as needed", "timing": "after" },
+        { "name": "Topical Diclofenac Gel", "dose": "apply thin layer", "frequency": "2-3 times daily", "timing": "anytime" }
+      ]
+    },
+    {
+      "condition": "Joint Pain/Arthritis",
+      "medicines": [
+        { "name": "Naproxen", "dose": "250 mg", "frequency": "twice daily", "timing": "after" },
+        { "name": "Topical Diclofenac Gel", "dose": "apply thin layer", "frequency": "2-3 times daily", "timing": "anytime" }
+      ]
+    },
+    {
+      "condition": "Muscle Pain",
+      "medicines": [
+        { "name": "Paracetamol", "dose": "500 mg", "frequency": "every 6 hours as needed", "timing": "after" },
+        { "name": "Topical Methyl Salicylate", "dose": "apply thin layer", "frequency": "2-3 times daily", "timing": "anytime" }
+      ]
+    },
+    {
+      "condition": "Eye Irritation/Allergy",
+      "medicines": [
+        { "name": "Artificial Tears", "dose": "1-2 drops", "frequency": "3-4 times daily", "timing": "anytime" },
+        { "name": "Olopatadine Drops", "dose": "1 drop", "frequency": "twice daily", "timing": "anytime" }
+      ]
+    },
+    {
+      "condition": "Ear Pain",
+      "medicines": [
+        { "name": "Paracetamol", "dose": "500 mg", "frequency": "every 6 hours as needed", "timing": "after" }
+      ]
+    },
+    {
+      "condition": "Toothache",
+      "medicines": [
+        { "name": "Ibuprofen", "dose": "400 mg", "frequency": "every 8 hours", "timing": "after" }
+      ]
+    },
+    {
+      "condition": "Gum Bleeding",
+      "medicines": [
+        { "name": "Chlorhexidine Mouthwash", "dose": "10-15 ml", "frequency": "twice daily", "timing": "anytime" }
+      ]
+    },
+    {
+      "condition": "Skin Rash/Allergy",
+      "medicines": [
+        { "name": "Cetirizine", "dose": "10 mg", "frequency": "once daily", "timing": "anytime" },
+        { "name": "Calamine Lotion", "dose": "apply thin layer", "frequency": "2-3 times daily", "timing": "anytime" }
+      ]
+    },
+    {
+      "condition": "Acne",
+      "medicines": [
+        { "name": "Benzoyl Peroxide Gel", "dose": "apply pea-sized", "frequency": "once daily at night", "timing": "anytime" }
+      ]
+    },
+    {
+      "condition": "Allergic Rhinitis",
+      "medicines": [
+        { "name": "Cetirizine", "dose": "10 mg", "frequency": "once daily", "timing": "anytime" },
+        { "name": "Fluticasone Nasal Spray", "dose": "1 spray/nostril", "frequency": "once daily", "timing": "anytime" }
+      ]
+    },
+    {
+      "condition": "Asthma (mild)",
+      "medicines": [
+        { "name": "Salbutamol Inhaler", "dose": "1-2 puffs", "frequency": "as needed", "timing": "anytime" }
+      ]
+    },
+    {
+      "condition": "UTI Symptoms (burning urination)",
+      "medicines": [
+        { "name": "ORS/Fluids", "dose": "250 ml", "frequency": "frequent small sips", "timing": "anytime" },
+        { "name": "Cranberry Extract", "dose": "as per label", "frequency": "once daily", "timing": "anytime" }
+      ]
+    },
+    {
+      "condition": "Frequent Urination (non-urgent)",
+      "medicines": [
+        { "name": "Lifestyle/Fluids", "dose": "-", "frequency": "monitor intake", "timing": "anytime" }
+      ]
+    },
+    {
+      "condition": "Period Pain (Dysmenorrhea)",
+      "medicines": [
+        { "name": "Mefenamic Acid", "dose": "500 mg", "frequency": "three times daily as needed", "timing": "after" },
+        { "name": "Drotaverine", "dose": "80 mg", "frequency": "two to three times daily", "timing": "after" }
+      ]
+    },
+    {
+      "condition": "Irregular Periods (symptomatic)",
+      "medicines": [
+        { "name": "Lifestyle/Tracking", "dose": "-", "frequency": "daily", "timing": "anytime" }
+      ]
+    },
+    {
+      "condition": "Pregnancy Nausea",
+      "medicines": [
+        { "name": "Pyridoxine (Vitamin B6)", "dose": "25 mg", "frequency": "three times daily", "timing": "anytime" },
+        { "name": "Doxylamine-Pyridoxine", "dose": "10/10 mg", "frequency": "once or twice daily", "timing": "anytime" }
+      ]
+    },
+    {
+      "condition": "Insomnia (short-term)",
+      "medicines": [
+        { "name": "Melatonin", "dose": "3 mg", "frequency": "at bedtime", "timing": "anytime" }
+      ]
+    },
+    {
+      "condition": "Anxiety (mild)",
+      "medicines": [
+        { "name": "Hydroxyzine", "dose": "25 mg", "frequency": "once or twice daily", "timing": "anytime" }
+      ]
+    },
+    {
+      "condition": "Depression (supportive)",
+      "medicines": [
+        { "name": "Omega-3 Supplement", "dose": "1 g", "frequency": "once daily", "timing": "anytime" }
+      ]
+    },
+    {
+      "condition": "Hypotension (supportive)",
+      "medicines": [
+        { "name": "ORS/Fluids", "dose": "250 ml", "frequency": "frequent small sips", "timing": "anytime" }
+      ]
+    },
+    {
+      "condition": "Anemia (iron deficiency)",
+      "medicines": [
+        { "name": "Ferrous Sulfate", "dose": "325 mg", "frequency": "once daily", "timing": "after" },
+        { "name": "Folic Acid", "dose": "5 mg", "frequency": "once daily", "timing": "anytime" }
+      ]
+    },
+    {
+      "condition": "Flu/Influenza",
+      "medicines": [
+        { "name": "Paracetamol", "dose": "650 mg", "frequency": "every 6-8 hours", "timing": "after" },
+        { "name": "Antihistamine (Cetirizine)", "dose": "10 mg", "frequency": "once daily", "timing": "anytime" }
+      ]
+    },
+    {
+      "condition": "Food Poisoning (mild)",
+      "medicines": [
+        { "name": "ORS", "dose": "200-250 ml", "frequency": "after each loose stool", "timing": "anytime" },
+        { "name": "Ondansetron", "dose": "4 mg", "frequency": "every 8 hours as needed", "timing": "anytime" }
+      ]
+    },
+    {
+      "condition": "Sunburn",
+      "medicines": [
+        { "name": "Aloe Vera Gel", "dose": "apply thin layer", "frequency": "2-3 times daily", "timing": "anytime" }
+      ]
+    },
+    {
+      "condition": "Heat Exhaustion (supportive)",
+      "medicines": [
+        { "name": "ORS/Fluids", "dose": "250 ml", "frequency": "frequent small sips", "timing": "anytime" }
+      ]
+    },
+    {
+      "condition": "Dehydration (mild)",
+      "medicines": [
+        { "name": "ORS", "dose": "200-250 ml", "frequency": "until rehydrated", "timing": "anytime" }
+      ]
+    },
+    {
+      "condition": "Allergic Reaction (mild)",
+      "medicines": [
+        { "name": "Cetirizine", "dose": "10 mg", "frequency": "once daily", "timing": "anytime" }
+      ]
+    }
+  ]
+}

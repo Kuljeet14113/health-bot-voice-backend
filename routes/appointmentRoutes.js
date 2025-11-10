@@ -13,7 +13,8 @@ import {
   getAllAppointments,
   getPatientHistoryWithDoctor,
   getPatientAppointmentsWithFilter,
-  getDoctorAssignedPatients
+  getDoctorAssignedPatients,
+  getDoctorAvailability
 } from '../controllers/Appointment.controller.js';
 
 const router = express.Router();
@@ -33,6 +34,8 @@ router.post('/book', appointmentLimiter, bookAppointment);
 
 // Protected routes (authentication required)
 router.get('/doctor/:doctorId', authenticate, getDoctorAppointments);
+// Availability of a doctor for a given date (public for booking UI convenience)
+router.get('/doctor/:doctorId/availability', getDoctorAvailability);
 router.get('/doctor/:doctorId/pending', authenticate, getDoctorPendingAppointments);
 router.get('/patient/:patientEmail', authenticate, getPatientAppointments);
 router.get('/stats/:doctorId', authenticate, getAppointmentStats);

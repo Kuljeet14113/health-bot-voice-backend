@@ -1,7 +1,7 @@
 import Appointment from '../models/appointment.js';
 import Doctor from '../models/doctor.js';
 import mongoose from 'mongoose';
-import { sendAppointmentConfirmationEmail, sendAppointmentCancellationEmail } from '../utils/emailService.js';
+import { sendAppointmentConfirmationEmail, sendAppointmentCancellationEmail, sendFollowUpAppointmentEmail } from '../utils/emailService.js';
 
 // Get booked time slots for a doctor on a specific date (public)
 export const getDoctorAvailability = async (req, res) => {
@@ -147,6 +147,16 @@ export const bookAppointment = async (req, res) => {
     });
 
     await appointment.save();
+
+    // If this is a follow-up appointment, notify the patient via email
+    try {
+      if (typeof reason === 'string' && reason.toLowerCase().includes('follow')) {
+        await sendFollowUpAppointmentEmail(appointment, doctor);
+      }
+    } catch (emailError) {
+      console.error('Failed to send follow-up appointment email:', emailError);
+      // Do not fail the booking due to email issues
+    }
 
     res.status(201).json({
       success: true,

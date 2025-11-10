@@ -73,16 +73,24 @@ export const bookAppointment = async (req, res) => {
       });
     }
 
-    // Check for conflicting appointments
+    // Normalize date and check for conflicting appointments using appointmentDay and time
     const appointmentDateObj = new Date(appointmentDate);
+    const appointmentDay = new Date(appointmentDateObj.getFullYear(), appointmentDateObj.getMonth(), appointmentDateObj.getDate());
     const existingAppointment = await Appointment.findOne({
       doctorId: doctorId,
-      appointmentDate: {
-        $gte: new Date(appointmentDateObj.setHours(0, 0, 0, 0)),
-        $lt: new Date(appointmentDateObj.setHours(23, 59, 59, 999))
-      },
       appointmentTime: appointmentTime,
-      status: { $in: ['pending', 'confirmed'] }
+      status: { $in: ['pending', 'confirmed'] },
+      $or: [
+        { appointmentDay: appointmentDay },
+        {
+          // Backward compatibility for older docs without appointmentDay
+          appointmentDay: { $exists: false },
+          appointmentDate: {
+            $gte: new Date(appointmentDay),
+            $lte: new Date(new Date(appointmentDay).setHours(23, 59, 59, 999))
+          }
+        }
+      ]
     });
 
     if (existingAppointment) {
@@ -106,6 +114,7 @@ export const bookAppointment = async (req, res) => {
       doctorSpecialization: doctor.specialization,
       doctorHospital: doctor.hospital,
       appointmentDate: appointmentDateObj,
+      appointmentDay,
       appointmentTime,
       reason,
       symptoms: symptoms || '',
@@ -113,7 +122,18 @@ export const bookAppointment = async (req, res) => {
       isUrgent: isUrgent || false
     });
 
-    await appointment.save();
+    try {
+      await appointment.save();
+    } catch (err) {
+      // Handle unique index (double-booking) race conditions
+      if (err && err.code === 11000) {
+        return res.status(409).json({
+          success: false,
+          message: 'This time slot is already booked. Please choose another time.'
+        });
+      }
+      throw err;
+    }
 
     res.status(201).json({
       success: true,
@@ -134,6 +154,42 @@ export const bookAppointment = async (req, res) => {
       success: false,
       message: 'Failed to book appointment. Please try again.'
     });
+  }
+};
+
+// Get doctor's booked time slots for a specific date
+export const getDoctorAvailability = async (req, res) => {
+  try {
+    const { doctorId } = req.params;
+    const { date } = req.query;
+
+    if (!mongoose.Types.ObjectId.isValid(doctorId)) {
+      return res.status(400).json({ success: false, message: 'Invalid doctor ID' });
+    }
+    if (!date) {
+      return res.status(400).json({ success: false, message: 'Date query param is required (YYYY-MM-DD)' });
+    }
+
+    const day = new Date(date);
+    if (isNaN(day.getTime())) {
+      return res.status(400).json({ success: false, message: 'Invalid date format' });
+    }
+
+    const start = new Date(day.setHours(0, 0, 0, 0));
+    const end = new Date(new Date(start).setHours(23, 59, 59, 999));
+
+    const appointments = await Appointment.find({
+      doctorId: new mongoose.Types.ObjectId(doctorId),
+      appointmentDate: { $gte: start, $lte: end },
+      status: { $in: ['pending', 'confirmed'] }
+    }).select('appointmentTime');
+
+    const bookedSlots = appointments.map(a => a.appointmentTime);
+    return res.status(200).json({ success: true, bookedSlots });
+
+  } catch (error) {
+    console.error('Get doctor availability error:', error);
+    return res.status(500).json({ success: false, message: 'Failed to fetch availability' });
   }
 };
 

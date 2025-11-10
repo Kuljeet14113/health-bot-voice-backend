@@ -57,6 +57,11 @@ const appointmentSchema = new mongoose.Schema({
     type: Date,
     required: true
   },
+  // Normalized day for uniqueness guard (start of day in server timezone)
+  appointmentDay: {
+    type: Date,
+    required: true
+  },
   appointmentTime: {
     type: String,
     required: true
@@ -122,6 +127,25 @@ appointmentSchema.index({ patientEmail: 1 });
 appointmentSchema.index({ patientId: 1 });
 appointmentSchema.index({ doctorId: 1, patientId: 1 });
 appointmentSchema.index({ status: 1 });
+
+// Unique guard: prevent double booking for the same doctor/day/time for active (pending/confirmed) appointments
+appointmentSchema.index(
+  { doctorId: 1, appointmentDay: 1, appointmentTime: 1 },
+  {
+    unique: true,
+    partialFilterExpression: { status: { $in: ['pending', 'confirmed'] }, appointmentDay: { $exists: true } }
+  }
+);
+
+// Pre-validate to ensure appointmentDay is set from appointmentDate
+appointmentSchema.pre('validate', function(next) {
+  if (this.appointmentDate && (!this.appointmentDay || isNaN(this.appointmentDay.getTime?.()))) {
+    const d = new Date(this.appointmentDate);
+    const startOfDay = new Date(d.getFullYear(), d.getMonth(), d.getDate());
+    this.appointmentDay = startOfDay;
+  }
+  next();
+});
 
 // Pre-save middleware to update updatedAt
 appointmentSchema.pre('save', function(next) {

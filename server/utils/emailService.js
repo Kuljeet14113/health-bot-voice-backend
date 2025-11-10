@@ -203,3 +203,45 @@ export const sendAppointmentCancellationEmail = async (appointment, doctor) => {
     throw new Error('Failed to send appointment cancellation email');
   }
 };
+
+// Send follow-up appointment notification email
+export const sendFollowUpAppointmentEmail = async (appointment, doctor) => {
+  try {
+    const transporter = createTransporter();
+    const fromName = process.env.EMAIL_FROM || `"HelthBot" <${process.env.EMAIL_USER}>`;
+
+    const mailOptions = {
+      from: fromName,
+      to: appointment.patientEmail,
+      subject: 'Follow-up Appointment - HelthBot',
+      html: `
+        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto; padding: 20px;">
+          <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 30px; border-radius: 10px 10px 0 0; text-align: center;">
+            <h1 style="margin: 0; font-size: 28px;">HelthBot</h1>
+            <p style="margin-top: 10px; opacity: 0.9;">Follow-up Appointment</p>
+          </div>
+          <div style="background: #f8f9fa; padding: 30px; border-radius: 0 0 10px 10px;">
+            <h2 style="color: #333;">Hello ${appointment.patientName},</h2>
+            <p style="color: #555;">follow up appintment - open my appointments in the app to know more</p>
+            <div style="background: #fff; padding: 20px; border-radius: 8px; margin: 20px 0; border-left: 4px solid #667eea;">
+              <h3 style="color: #333; margin-top: 0;">Summary</h3>
+              <p style="margin: 8px 0;"><strong>Doctor:</strong> Dr. ${doctor.name}</p>
+              <p style="margin: 8px 0;"><strong>Date:</strong> ${new Date(appointment.appointmentDate).toLocaleDateString()}</p>
+              <p style="margin: 8px 0;"><strong>Time:</strong> ${appointment.appointmentTime}</p>
+            </div>
+            <div style="text-align: center; margin-top: 30px;">
+              <p style="color: #667eea; font-weight: bold;">Thank you for choosing HelthBot!</p>
+            </div>
+          </div>
+        </div>
+      `,
+    };
+
+    const info = await transporter.sendMail(mailOptions);
+    console.log('Follow-up appointment email sent to', appointment.patientEmail, '| Message ID:', info.messageId);
+    return true;
+  } catch (error) {
+    console.error('Failed to send follow-up appointment email:', error);
+    throw new Error('Failed to send follow-up appointment email');
+  }
+};

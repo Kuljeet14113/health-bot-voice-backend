@@ -1,5 +1,5 @@
 import { SymptomClassifier } from '../utils/symptomClassifier.js';
-import { generatePrescriptionWithGemini } from '../utils/prescriptionService.js';
+import { generatePrescriptionWithGemini, findMedicinesForSymptoms } from '../utils/prescriptionService.js';
 import Doctor from '../models/doctor.js';
 
 export const generatePrescription = async (req, res) => {
@@ -53,6 +53,9 @@ export const generatePrescription = async (req, res) => {
 
     const prescription = await generatePrescriptionWithGemini(prescriptionData);
 
+    // Suggest medicines from dataset based on symptoms
+    const suggestedMedicines = findMedicinesForSymptoms(symptoms);
+
     // Format response
     const response = {
       success: true,
@@ -65,6 +68,7 @@ export const generatePrescription = async (req, res) => {
         hospital: recommendedDoctor.hospital,
         location: recommendedDoctor.location
       } : null,
+      medicines: suggestedMedicines,
       complexity: classification.complexity,
       timestamp: new Date().toISOString()
     };

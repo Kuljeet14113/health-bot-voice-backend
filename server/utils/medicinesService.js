@@ -20,6 +20,22 @@ function normalize(str = '') {
   return String(str).toLowerCase();
 }
 
+function escapeRegExp(str = '') {
+  return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+
+function hasWord(text = '', term = '') {
+  if (!term) return false;
+  const re = new RegExp(`\\b${escapeRegExp(term)}\\b`, 'i');
+  return re.test(text);
+}
+
+function hasPhrase(text = '', phrase = '') {
+  if (!phrase) return false;
+  const re = new RegExp(`\\b${escapeRegExp(phrase)}\\b`, 'i');
+  return re.test(text);
+}
+
 // Basic heuristic mapping: if user's symptom text includes keywords
 // related to a condition name, consider it a match.
 export function findMedicinesBySymptomText(symptomText) {
@@ -68,7 +84,8 @@ export function findMedicinesBySymptomText(symptomText) {
     { keywords: ['allergic reaction', 'hives', 'swelling'], condition: 'Allergic Reaction (mild)' },
   ];
 
-  const targeted = keywordMap.find(entry => entry.keywords.some(k => text.includes(k)));
+  // First: targeted keyword mapping using word boundaries
+  const targeted = keywordMap.find(entry => entry.keywords.some(k => hasWord(text, k)));
 
   const matched = [];
   if (targeted) {
@@ -80,8 +97,14 @@ export function findMedicinesBySymptomText(symptomText) {
   if (matched.length === 0) {
     for (const c of conditions) {
       const cond = normalize(c.condition);
-      // Any overlapping words
-      if (cond.split(/[\s/()]+/).some(w => w && text.includes(w))) {
+      // Prefer full condition phrase match
+      if (hasPhrase(text, cond)) {
+        matched.push(c);
+        continue;
+      }
+      // Otherwise, check any meaningful word with word boundaries
+      const words = cond.split(/[\s/()]+/).filter(Boolean);
+      if (words.some(w => w.length >= 3 && hasWord(text, w))) {
         matched.push(c);
       }
       if (matched.length >= 2) break;

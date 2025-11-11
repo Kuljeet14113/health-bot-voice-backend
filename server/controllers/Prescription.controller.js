@@ -22,21 +22,15 @@ export const generatePrescription = async (req, res) => {
     let recommendedDoctor = null;
     if (classification.complexity === 'complex' && classification.doctors.length > 0) {
       recommendedDoctor = classification.doctors[0]; // Get first recommended doctor
-    } else {
-      // Try to find a doctor matching derived specialization first
-      const bySpecialization = await Doctor.find({
+    }
+
+    // For basic cases, try to find a matching specialist by derived specialization; if none, keep null
+    if (!recommendedDoctor && derivedSpecialization) {
+      const specialist = await Doctor.findOne({
         specialization: { $regex: derivedSpecialization, $options: 'i' }
-      }).limit(1);
-      if (bySpecialization.length > 0) {
-        recommendedDoctor = bySpecialization[0];
-      } else {
-        // Fallback to general practitioner
-        const generalPractitioners = await Doctor.find({ 
-          specialization: { $regex: /general|family|primary/i }
-        }).limit(1);
-        if (generalPractitioners.length > 0) {
-          recommendedDoctor = generalPractitioners[0];
-        }
+      });
+      if (specialist) {
+        recommendedDoctor = specialist;
       }
     }
 

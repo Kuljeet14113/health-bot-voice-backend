@@ -186,6 +186,10 @@
     {
       "symptoms": ["allergic reaction", "swelling", "hives"],
       "advice": "Allergic reactions may cause rashes or swelling. Take an antihistamine if available. If breathing difficulty occurs, seek emergency help."
+    },
+    {
+      "symptoms": ["dandruff", "scalp itching", "scalp irritation"],
+  "advice": "Dandruff is usually caused by a dry scalp, fungal infection, or oily skin. Use an anti-dandruff shampoo containing ketoconazole, zinc pyrithione, or selenium sulfide twice a week. Keep your scalp clean, avoid using too much hair oil, and manage stress. If dandruff persists or causes redness and hair loss, consult a dermatologist."
     }
   ]
   

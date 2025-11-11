@@ -50,24 +50,11 @@ export const processChatMessage = async (req, res) => {
         response.message += `\n\n**Doctor Recommendation:** Based on your symptoms, I recommend consulting with a ${classification.specialization}. Here are some available doctors:`;
         response.doctors = classification.doctors;
       }
-      // Add concise medicine suggestions summary below the advice
-      if (medicines && medicines.length > 0) {
-        const first = medicines[0];
-        const medsList = (first.medicines || []).slice(0, 3).map(m => `${m.name} (${m.dose}, ${m.frequency}${m.timing ? ', ' + m.timing : ''})`).join('; ');
-        if (medsList) {
-          response.message += `\n\n**Suggested Medicines (from dataset) for ${first.condition}:** ${medsList}`;
-        }
-      }
+      // Do not append inline medicines into message; UI will render from response.medicines
     } else {
       // Fallback response if Gemini is unavailable
       response.message = classification.message;
-      if (medicines && medicines.length > 0) {
-        const first = medicines[0];
-        const medsList = (first.medicines || []).slice(0, 3).map(m => `${m.name} (${m.dose}, ${m.frequency}${m.timing ? ', ' + m.timing : ''})`).join('; ');
-        if (medsList) {
-          response.message += `\n\n**Suggested Medicines (from dataset) for ${first.condition}:** ${medsList}`;
-        }
-      }
+      // Do not append inline medicines into message; UI will render from response.medicines
     }
 
     res.json(response);

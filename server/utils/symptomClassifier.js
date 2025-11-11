@@ -135,10 +135,10 @@ export class SymptomClassifier {
           shouldSeeDoctor: true
         };
       } else {
-        // For basic symptoms, provide self-care advice
+        // For basic symptoms, provide AI recommendations disclaimer per request
         return {
           complexity: 'basic',
-          message: `This appears to be a common symptom that can often be managed with self-care. However, if symptoms persist or worsen, please consult a healthcare provider.`,
+          message: `here are the recommendations according to heathbot ai, but please consult your doc before taking medicines`,
           doctors: [],
           shouldSeeDoctor: false
         };

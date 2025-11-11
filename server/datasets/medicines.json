@@ -267,6 +267,15 @@
       ]
     },
     {
+      "condition": "Dandruff",
+   "medicines": [
+     { "name": "Ketoconazole Shampoo 2%", "dose": "Apply on scalp", "frequency": "twice a week", "timing": "anytime" },
+     { "name": "Zinc Pyrithione Shampoo", "dose": "Apply on scalp", "frequency": "alternate days", "timing": "anytime" },
+    { "name": "Selenium Sulfide Lotion 1%", "dose": "Apply on scalp and rinse after 10 minutes", "frequency": "twice weekly", "timing": "anytime" },
+    { "name": "Ciclopirox Olamine Lotion", "dose": "Apply thin layer", "frequency": "once daily (if severe dandruff)", "timing": "anytime" }
+  ]
+},
+    {
       "condition": "Allergic Reaction (mild)",
       "medicines": [
         { "name": "Cetirizine", "dose": "10 mg", "frequency": "once daily", "timing": "anytime" }

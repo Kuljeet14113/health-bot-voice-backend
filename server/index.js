@@ -15,6 +15,7 @@ import medicinesRoutes from './routes/medicinesRoutes.js';
 import http from 'http';
 import { Server as SocketIOServer } from 'socket.io';
 import ChatMessage from './models/chatMessage.js';
+import Appointment from './models/appointment.js';
 
 dotenv.config();
 
@@ -58,7 +59,35 @@ app.get('/uploads/:type/:filename', (req, res) => {
 });
 
 mongoose.connect(process.env.MONGODB_URI)
-  .then(() => console.log('Connected to MongoDB'))
+  .then(async () => {
+    console.log('Connected to MongoDB');
+    try {
+      // Backfill appointmentDay for legacy docs and sync indexes for unique guard
+      const result = await Appointment.updateMany(
+        { appointmentDay: { $exists: false } },
+        [
+          {
+            $set: {
+              appointmentDay: {
+                $dateFromParts: {
+                  year: { $year: '$appointmentDate' },
+                  month: { $month: '$appointmentDate' },
+                  day: { $dayOfMonth: '$appointmentDate' }
+                }
+              }
+            }
+          }
+        ]
+      );
+      if (result?.modifiedCount) {
+        console.log(`Backfilled appointmentDay on ${result.modifiedCount} legacy appointments.`);
+      }
+      await Appointment.syncIndexes();
+      console.log('Appointment indexes synchronized.');
+    } catch (e) {
+      console.error('Index sync/backfill error:', e?.message || e);
+    }
+  })
   .catch((error) => {
     console.error('MongoDB connection error:', error);
     process.exit(1);

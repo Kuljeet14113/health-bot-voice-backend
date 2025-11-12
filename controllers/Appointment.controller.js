@@ -3,6 +3,25 @@ import Doctor from '../models/doctor.js';
 import mongoose from 'mongoose';
 import { sendAppointmentConfirmationEmail, sendAppointmentCancellationEmail } from '../utils/emailService.js';
 
+// Normalize time strings like '10:00 am', '10:00AM', '10:00  AM' to '10:00 AM'
+const normalizeAmPm = (timeStr = '') => {
+  if (!timeStr) return timeStr;
+  const s = String(timeStr).trim().toUpperCase().replace(/\s+/g, ' ');
+  // If it already contains AM/PM, normalize spacing
+  if (/AM|PM/.test(s)) {
+    const match = s.match(/(\d{1,2}):(\d{2})\s*(AM|PM)/);
+    if (match) {
+      let h = parseInt(match[1], 10);
+      const m = match[2];
+      const mer = match[3];
+      if (h < 1) h = 12; if (h > 12) h = h % 12 || 12;
+      const hh = h.toString().padStart(2, '0');
+      return `${hh}:${m} ${mer}`;
+    }
+  }
+  return s;
+};
+
 // Book a new appointment
 export const bookAppointment = async (req, res) => {
   try {
@@ -73,12 +92,14 @@ export const bookAppointment = async (req, res) => {
       });
     }
 
+    // Normalize time and date
+    const normalizedTime = normalizeAmPm(appointmentTime);
     // Normalize date and check for conflicting appointments using appointmentDay and time
     const appointmentDateObj = new Date(appointmentDate);
     const appointmentDay = new Date(appointmentDateObj.getFullYear(), appointmentDateObj.getMonth(), appointmentDateObj.getDate());
     const existingAppointment = await Appointment.findOne({
       doctorId: doctorId,
-      appointmentTime: appointmentTime,
+      appointmentTime: normalizedTime,
       status: { $in: ['pending', 'confirmed'] },
       $or: [
         { appointmentDay: appointmentDay },
@@ -115,7 +136,7 @@ export const bookAppointment = async (req, res) => {
       doctorHospital: doctor.hospital,
       appointmentDate: appointmentDateObj,
       appointmentDay,
-      appointmentTime,
+      appointmentTime: normalizedTime,
       reason,
       symptoms: symptoms || '',
       notes: notes || '',

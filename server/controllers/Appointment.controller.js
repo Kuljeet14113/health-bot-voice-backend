@@ -3,6 +3,24 @@ import Doctor from '../models/doctor.js';
 import mongoose from 'mongoose';
 import { sendAppointmentConfirmationEmail, sendAppointmentCancellationEmail, sendFollowUpAppointmentEmail } from '../utils/emailService.js';
 
+// Normalize time strings like '10:00 am', '10:00AM', '10:00  AM' to '10:00 AM'
+const normalizeAmPm = (timeStr = '') => {
+  if (!timeStr) return timeStr;
+  const s = String(timeStr).trim().toUpperCase().replace(/\s+/g, ' ');
+  if (/AM|PM/.test(s)) {
+    const match = s.match(/(\d{1,2}):(\d{2})\s*(AM|PM)/);
+    if (match) {
+      let h = parseInt(match[1], 10);
+      const m = match[2];
+      const mer = match[3];
+      if (h < 1) h = 12; if (h > 12) h = h % 12 || 12;
+      const hh = h.toString().padStart(2, '0');
+      return `${hh}:${m} ${mer}`;
+    }
+  }
+  return s;
+};
+
 // Get booked time slots for a doctor on a specific date (public)
 export const getDoctorAvailability = async (req, res) => {
   try {
@@ -27,7 +45,7 @@ export const getDoctorAvailability = async (req, res) => {
       status: { $in: ['pending', 'confirmed'] }
     }).select('appointmentTime status');
 
-    const bookedSlots = appointments.map(a => a.appointmentTime);
+    const bookedSlots = appointments.map(a => normalizeAmPm(a.appointmentTime));
 
     res.status(200).json({ success: true, bookedSlots });
   } catch (error) {
@@ -106,16 +124,25 @@ export const bookAppointment = async (req, res) => {
       });
     }
 
-    // Check for conflicting appointments
+    // Normalize time and date, and check for conflicting appointments using normalized appointmentDay
+    const normalizedTime = normalizeAmPm(appointmentTime);
     const appointmentDateObj = new Date(appointmentDate);
+    const appointmentDay = new Date(appointmentDateObj.getFullYear(), appointmentDateObj.getMonth(), appointmentDateObj.getDate());
     const existingAppointment = await Appointment.findOne({
       doctorId: doctorId,
-      appointmentDate: {
-        $gte: new Date(appointmentDateObj.setHours(0, 0, 0, 0)),
-        $lt: new Date(appointmentDateObj.setHours(23, 59, 59, 999))
-      },
-      appointmentTime: appointmentTime,
-      status: { $in: ['pending', 'confirmed'] }
+      appointmentTime: normalizedTime,
+      status: { $in: ['pending', 'confirmed'] },
+      $or: [
+        { appointmentDay: appointmentDay },
+        {
+          // Backward compatibility for older docs without appointmentDay
+          appointmentDay: { $exists: false },
+          appointmentDate: {
+            $gte: new Date(appointmentDay),
+            $lt: new Date(new Date(appointmentDay).setHours(23, 59, 59, 999))
+          }
+        }
+      ]
     });
 
     if (existingAppointment) {
@@ -139,14 +166,25 @@ export const bookAppointment = async (req, res) => {
       doctorSpecialization: doctor.specialization,
       doctorHospital: doctor.hospital,
       appointmentDate: appointmentDateObj,
-      appointmentTime,
+      appointmentDay,
+      appointmentTime: normalizedTime,
       reason,
       symptoms: symptoms || '',
       notes: notes || '',
       isUrgent: isUrgent || false
     });
 
-    await appointment.save();
+    try {
+      await appointment.save();
+    } catch (err) {
+      if (err && err.code === 11000) {
+        return res.status(409).json({
+          success: false,
+          message: 'This time slot is already booked. Please choose another time.'
+        });
+      }
+      throw err;
+    }
 
     // If this is a follow-up appointment, notify the patient via email
     try {
